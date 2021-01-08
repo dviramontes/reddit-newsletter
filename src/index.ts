@@ -9,4 +9,4 @@ app.get("/ping", pingHandler);
 
 app.listen(+port);
 
-console.log(`'server running on port: ${port}`);
+console.log(`server running on port: ${port}`);
