@@ -1,12 +1,27 @@
 import express from "express";
-import { pingHandler } from "./handlers";
+import { api, healthCheck } from "./routes";
+import { pool } from "./db";
 
 const app = express();
 const port = process.env.PORT || "4000";
 
+// middleware
+app.use(express.urlencoded({ extended: true }));
+
 // obligatory health check
-app.get("/ping", pingHandler);
+app.use("/ping", healthCheck);
+
+app.use("/api", api);
 
 app.listen(+port);
 
-console.log(`server running on port: ${port}`);
+(async function () {
+  const client = await pool.connect();
+  const {
+    rows: [{ now }],
+  } = await client.query("SELECT NOW()");
+  console.log(`-- established db connection: ${now}`);
+  client.release();
+})();
+
+console.log(`-- server running on port: ${port}`);
