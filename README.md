@@ -17,6 +17,8 @@
 
 ### Setup
 
+- npm i
+
 #### create alias for docker mac
 
 - `sudo ifconfig lo0 alias 10.254.254.254`
@@ -33,7 +35,22 @@
 
 other dev tasks
 
-- `npm run format` lints code using prettier
+#### Linting
+
+- `npm run format` uses prettier
+
+#### Database Change Management
+
+Create new migration
+
+- `npx knex migrate:make <migration_name> -x ts`
+
+Running migrations
+
+- `npx knex migrate:latest --env <env>` where _env_ can be development, staging or production
+- `npx knex migrate:rollback` rollback latest
+- `npx knex migrate:list` list pending migrations
+- For more commands available from knex checkout [this page](https://knexjs.org/#Migrations)
 
 ### Testing
 
