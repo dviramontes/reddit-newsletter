@@ -1,11 +1,13 @@
 import express from "express";
 import { api, healthCheck } from "./routes";
 import { pool } from "./db";
+import bodyParser = require("body-parser");
 
 const app = express();
 const port = process.env.PORT || "4000";
 
 // middleware
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 // obligatory health check

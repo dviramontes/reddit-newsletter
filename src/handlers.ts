@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { fetchPosts } from "./reddit";
+import { pool } from "./db";
+import { isEmpty } from "lodash";
 
 export const pingHandler = (req: Request, res: Response) => {
   return res.send("pong");
@@ -17,4 +19,155 @@ export const apiHandler = async (req: Request, res: Response) => {
   }
 
   return res.send({});
+};
+
+export const getAllUsersHandler = async (req: Request, res: Response) => {
+  const client = await pool.connect();
+  const allUsersResponse = await client.query("select * from users");
+
+  res.json({
+    status: 200,
+    users: allUsersResponse.rows || [],
+  });
+
+  await client.release();
+};
+
+export const getUserHandler = async (req: Request, res: Response) => {
+  const client = await pool.connect();
+  const { id } = req.params;
+  const userResponse = await client.query("SELECT * FROM users WHERE id = $1", [
+    id,
+  ]);
+
+  if (userResponse.rowCount > 0) {
+    res.json({
+      status: 200,
+      user: userResponse.rows[0] || {},
+    });
+  } else {
+    res.json({
+      status: 404,
+      message: `user with id: ${id} not found`,
+    });
+  }
+
+  await client.release();
+};
+
+export const createNewUserHandler = async (req: Request, res: Response) => {
+  if (isEmpty(req.body)) {
+    res.send({
+      status: 400,
+      message: "missing request body",
+    });
+    return;
+  }
+
+  const { fullname, email, time_preference } = req.body;
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    const prepareStatement =
+      "INSERT INTO users(fullname, email, time_preference) VALUES ($1,$2,$3) RETURNING *";
+    const createUserResponse = await client.query(prepareStatement, [
+      fullname,
+      email,
+      time_preference,
+    ]);
+
+    res.json({
+      status: 200,
+      user: createUserResponse.rows[0],
+    });
+
+    await client.query("COMMIT");
+  } catch (err) {
+    console.log({ err });
+
+    res.json({
+      status: 500,
+      message: err.detail,
+    });
+
+    await client.query("ROLLBACK");
+  } finally {
+    await client.release();
+  }
+};
+
+export const updateUserHandler = async (req: Request, res: Response) => {
+  if (isEmpty(req.params) || isEmpty(req.body)) {
+    res.send({
+      status: 400,
+      message: "missing :id url param or request body",
+    });
+    return;
+  }
+
+  const { id } = req.params;
+  const { fullname, email, time_preference, active } = req.body;
+  const client = await pool.connect();
+
+  try {
+    const prepareStatement = `INSERT INTO users(id, fullname, email, time_preference) VALUES ($1,$2,$3,$4)
+      ON CONFLICT (id) DO UPDATE SET updated_at = now(),
+         fullname = $2,
+         email = $3,
+         time_preference = $4,
+         active = $5
+      RETURNING *`;
+    const createUserResponse = await client.query(prepareStatement, [
+      id,
+      fullname,
+      email,
+      time_preference,
+      active,
+    ]);
+
+    res.json({
+      status: 200,
+      user: createUserResponse.rows[0],
+    });
+  } catch (err) {
+    console.log({ err });
+
+    res.json({
+      status: 500,
+      message: err.detail,
+    });
+  }
+  await client.release();
+};
+
+export const deleteUserHandler = async (req: Request, res: Response) => {
+  if (isEmpty(req.params)) {
+    res.send({
+      status: 400,
+      message: "missing :id url param",
+    });
+    return;
+  }
+
+  const client = await pool.connect();
+  const { id } = req.params;
+
+  const deleteResponse = await client.query("DELETE from users WHERE id = $1", [
+    id,
+  ]);
+
+  if (deleteResponse.rowCount > 0) {
+    res.json({
+      status: 200,
+      message: `successfully deleted user with id: ${id}`,
+    });
+  } else {
+    res.json({
+      status: 404,
+      message: `user with id: ${id} not found`,
+    });
+  }
+
+  await client.release();
 };

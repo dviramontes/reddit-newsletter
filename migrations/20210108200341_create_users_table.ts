@@ -12,11 +12,8 @@ export async function up(db: Knex): Promise<void> {
       .specificType("updated_at", "timestamptz")
       .notNullable()
       .defaultTo(db.fn.now());
-    table
-      .specificType("deleted_at", "timestamptz")
-      .notNullable()
-      .defaultTo(db.fn.now());
-    table.string("full_name", 100).notNullable().unique();
+    table.specificType("deleted_at", "timestamptz");
+    table.string("fullname", 100);
     table.string("email", 50).notNullable().unique();
     table.boolean("active").defaultTo(true);
     table.integer("time_preference").defaultTo(8);
