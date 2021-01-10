@@ -4,8 +4,11 @@ import {
   getAllUsersHandler,
   createNewUserHandler,
   getUserHandler,
-  updateUserHandler,
+  patchUserHandler,
   deleteUserHandler,
+  createSubscriptionHandler,
+  patchSubscriptionHandler,
+  getAllSubscriptionsHandler
 } from "./handlers";
 
 export const healthCheck = express.Router();
@@ -14,8 +17,11 @@ healthCheck.all("/", pingHandler);
 
 export const api = express.Router();
 
+api.get("/subs", getAllSubscriptionsHandler);
 api.get("/users", getAllUsersHandler);
 api.get("/users/:id", getUserHandler);
 api.post("/users", createNewUserHandler);
-api.patch("/users/:id", updateUserHandler);
+api.patch("/users/:id", patchUserHandler);
 api.delete("/users/:id", deleteUserHandler);
+api.post("/users/:id/subs", createSubscriptionHandler);
+api.patch("/users/:id/subs/:subId", patchSubscriptionHandler);

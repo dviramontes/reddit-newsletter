@@ -3,6 +3,7 @@ import { CreateTableBuilder } from "knex";
 
 export async function up(db: Knex): Promise<void> {
   await db.schema.createTable("newsletters", (table: CreateTableBuilder) => {
+    table.increments("id").notNullable().primary();
     table
       .integer("user_id")
       .unsigned()
@@ -18,8 +19,13 @@ export async function up(db: Knex): Promise<void> {
       .notNullable()
       .defaultTo(db.fn.now());
     table.specificType("deleted_at", "timestamptz");
-    table.string("subreddit", 100).notNullable().defaultTo("");
-    table.string("url", 200).notNullable().defaultTo("");
+    table
+      .string("subreddit", 100)
+      .notNullable()
+      .defaultTo("");
+    table.string("url", 200)
+      .notNullable()
+      .defaultTo("");
     table.jsonb("top").notNullable().defaultTo("{}");
   });
 }
