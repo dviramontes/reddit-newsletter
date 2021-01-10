@@ -56,6 +56,10 @@ Running migrations
 
 - TODO
 
+* [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic
+* [ ] Write test
+* [ ] CICD
+
 ### Production
 
 - `npm run build`

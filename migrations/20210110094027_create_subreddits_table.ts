@@ -2,14 +2,8 @@ import * as Knex from "knex";
 import { CreateTableBuilder } from "knex";
 
 export async function up(db: Knex): Promise<void> {
-  await db.schema.createTable("newsletters", (table: CreateTableBuilder) => {
+  await db.schema.createTable("subreddits", (table: CreateTableBuilder) => {
     table.increments("id").notNullable().primary();
-    table
-      .integer("user_id")
-      .unsigned()
-      .references("users.id")
-      .onUpdate("CASCADE")
-      .onDelete("CASCADE");
     table
       .specificType("created_at", "timestamptz")
       .notNullable()
@@ -19,17 +13,12 @@ export async function up(db: Knex): Promise<void> {
       .notNullable()
       .defaultTo(db.fn.now());
     table.specificType("deleted_at", "timestamptz");
-    table
-      .string("subreddit", 100)
-      .notNullable()
-      .defaultTo("");
-    table.string("url", 200)
-      .notNullable()
-      .defaultTo("");
+    table.string("name", 100).unique().notNullable().defaultTo("");
+    table.string("url", 200).unique().notNullable().defaultTo("");
     table.jsonb("top").notNullable().defaultTo("{}");
   });
 }
 
 export async function down(db: Knex): Promise<void> {
-  await db.schema.dropSchemaIfExists("newsletters");
+  await db.schema.dropSchemaIfExists("subreddits");
 }

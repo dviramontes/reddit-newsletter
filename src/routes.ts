@@ -7,8 +7,7 @@ import {
   patchUserHandler,
   deleteUserHandler,
   createSubscriptionHandler,
-  patchSubscriptionHandler,
-  getAllSubscriptionsHandler
+  getAllSubscriptionsHandler,
 } from "./handlers";
 
 export const healthCheck = express.Router();
@@ -24,4 +23,3 @@ api.post("/users", createNewUserHandler);
 api.patch("/users/:id", patchUserHandler);
 api.delete("/users/:id", deleteUserHandler);
 api.post("/users/:id/subs", createSubscriptionHandler);
-api.patch("/users/:id/subs/:subId", patchSubscriptionHandler);
