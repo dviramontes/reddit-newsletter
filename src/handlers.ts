@@ -9,6 +9,15 @@ export const pingHandler = (req: Request, res: Response) => {
   return res.send("pong");
 };
 
+export const getAllSubredditsHandler = async (req: Request, res: Response) => {
+  const client = await pool.connect();
+  const allSubsResponse = await client.query("SELECT * FROM subreddits");
+
+  res.status(200).json({ subreddits: allSubsResponse.rows || [] });
+
+  await client.release();
+};
+
 export const getAllSubscriptionsHandler = async (
   req: Request,
   res: Response
@@ -70,11 +79,9 @@ export const createNewUserHandler = async (req: Request, res: Response) => {
     res.status(200).json({ user: createUserResponse.rows[0] });
 
     await client.query("COMMIT");
-  } catch (err) {
-    console.log({ err });
-
-    res.status(500).send(err.detail);
-
+  } catch (error) {
+    console.error({ error });
+    res.status(500).send(error.detail);
     await client.query("ROLLBACK");
   } finally {
     await client.release();
@@ -109,10 +116,9 @@ export const patchUserHandler = async (req: Request, res: Response) => {
     ]);
 
     res.status(200).json({ user: createUserResponse.rows[0] });
-  } catch (err) {
-    console.log({ err });
-
-    res.status(500).send(err.detail);
+  } catch (error) {
+    console.error({ error });
+    res.status(500).send(error.detail);
   }
   await client.release();
 };

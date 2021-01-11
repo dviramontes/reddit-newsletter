@@ -14,6 +14,7 @@
 
 - Node >= 12
 - Docker
+- [NVM](https://github.com/nvm-sh/nvm)
 
 ### Setup
 
@@ -32,6 +33,7 @@
 
 - `make dcu`
 - `npm run dev`
+- `npm run worker`
 
 other dev tasks
 
@@ -54,11 +56,9 @@ Running migrations
 
 ### Testing
 
-- TODO
-
-* [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic
-* [ ] Write test
-* [ ] CICD
+- [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic
+- [ ] Write test
+- [ ] CICD
 
 ### Production
 

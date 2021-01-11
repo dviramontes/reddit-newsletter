@@ -46,7 +46,7 @@ export async function upsertNewsletter(user_id: number, subredditId: number) {
         rowResult = createTransaction.rows[0];
       }
     } catch (error) {
-      console.log({ err: error });
+      console.error({ error });
       await client.query("ROLLBACK");
       return err(error.detail);
     } finally {

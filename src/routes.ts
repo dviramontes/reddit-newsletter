@@ -8,6 +8,7 @@ import {
   deleteUserHandler,
   createSubscriptionHandler,
   getAllSubscriptionsHandler,
+  getAllSubredditsHandler,
 } from "./handlers";
 
 export const healthCheck = express.Router();
@@ -16,7 +17,8 @@ healthCheck.all("/", pingHandler);
 
 export const api = express.Router();
 
-api.get("/subs", getAllSubscriptionsHandler);
+api.get("/subreddits", getAllSubredditsHandler);
+api.get("/subscriptions", getAllSubscriptionsHandler);
 api.get("/users", getAllUsersHandler);
 api.get("/users/:id", getUserHandler);
 api.post("/users", createNewUserHandler);

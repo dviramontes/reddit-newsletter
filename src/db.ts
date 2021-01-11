@@ -7,3 +7,12 @@ const connectionString =
 export const pool = new Pool({
   connectionString,
 });
+
+export async function pingDatabase() {
+  const client = await pool.connect();
+  const {
+    rows: [{ now }],
+  } = await client.query("SELECT NOW()");
+  console.log(`-- established db connection: ${now}`);
+  client.release();
+}

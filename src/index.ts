@@ -1,29 +1,22 @@
-import express from "express";
-import { api, healthCheck } from "./routes";
-import { pool } from "./db";
-import bodyParser = require("body-parser");
+import minimist = require("minimist");
+import { startApiServer } from "./server";
+import { startWorker } from "./worker";
 
-const app = express();
-const port = process.env.PORT || "4000";
+const { mode } = minimist(process.argv.slice(2));
 
-// middleware
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+console.log(`-- running mode: ${mode || "server"}`);
 
-// obligatory health check
-app.use("/ping", healthCheck);
-
-app.use("/api", api);
-
-app.listen(+port);
-
-(async function () {
-  const client = await pool.connect();
-  const {
-    rows: [{ now }],
-  } = await client.query("SELECT NOW()");
-  console.log(`-- established db connection: ${now}`);
-  client.release();
+(async () => {
+  switch (mode) {
+    case "worker":
+      // bootstraps worker for fetching latest post in
+      // subreddit table
+      await startWorker();
+      break;
+    default:
+      // bootstraps api server for creating user accounts
+      // and newsletter subscriptions
+      await startApiServer();
+      break;
+  }
 })();
-
-console.log(`-- server running on port: ${port}`);

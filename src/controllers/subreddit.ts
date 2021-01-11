@@ -39,12 +39,41 @@ export async function upsertSubreddit(name: string, url: string) {
         rowResult = createTransaction.rows[0];
       }
     } catch (error) {
-      console.log({ err: error });
+      console.error({ error });
       await client.query("ROLLBACK");
       return err(error.detail);
     } finally {
       await client.release();
     }
+  }
+
+  return ok(rowResult);
+}
+
+export async function updateSubredditTops(id: number, tops: object[]) {
+  let rowResult = null;
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    const prepareStatement = `
+      UPDATE subreddits SET top = $1 WHERE id = $2 returning *;
+    `;
+    const updateTransaction = await client.query(prepareStatement, [
+      JSON.stringify(tops),
+      id,
+    ]);
+
+    if (updateTransaction.rowCount === 1) {
+      await client.query("COMMIT");
+      rowResult = updateTransaction.rows[0];
+    }
+  } catch (error) {
+    console.error({ error });
+    await client.query("ROLLBACK");
+    return err(error.detail);
+  } finally {
+    await client.release();
   }
 
   return ok(rowResult);

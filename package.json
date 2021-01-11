@@ -7,13 +7,15 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "worker": "nodemon --watch 'src/worker.ts' --exec 'ts-node' src/index.ts --mode=worker"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.9",
+    "@types/minimist": "^1.2.1",
     "@types/node": "^14.14.20",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
@@ -28,6 +30,7 @@
     "express": "^4.17.1",
     "knex": "^0.21.15",
     "lodash": "^4.17.20",
+    "minimist": "^1.2.5",
     "neverthrow": "^3.1.4",
     "pg": "^8.5.1"
   }
