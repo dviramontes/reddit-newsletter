@@ -5,8 +5,12 @@ import { updateSubredditTops } from "./controllers/subreddit";
 
 export async function startWorker() {
   try {
+    // host will depend minikube ip assignment
+    // $ minikube ssh "route -n | grep ^0.0.0.0 | awk '{ print \$2 }'"
+    // for docker usage use `host.docker.internal`
+    const host = "10.0.2.2";
     const subredditRows = await axios.get(
-      "http://host.docker.internal:4000/api/subreddits"
+      `http://${host}:4000/api/subreddits`
     );
     if (!isEmpty(subredditRows.data.subreddits)) {
       for (const { id, name } of subredditRows.data.subreddits) {

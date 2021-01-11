@@ -10,6 +10,9 @@
 // TODO
 ```
 
+- [For API service endpoints refer to this doc](./API.md)
+- [For infra details and usage check out this doc](./k8s/README.md)
+
 ### Requirements
 
 - Node >= 12
@@ -61,6 +64,9 @@ Running locally with docker
 - `make start` # starts API server
 - `make build worker` # builds worker code + image
 - `docker run -it --network host reddit-newsletter/worker` # runs worker once and shuts down
+
+### Infra
+- for instructions on how to use, please refer to [this doc](./k8s/README.md)
 
 ### TODO
 
