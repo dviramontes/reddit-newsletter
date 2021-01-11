@@ -54,6 +54,14 @@ Running migrations
 - `npx knex migrate:list` list pending migrations
 - For more commands available from knex checkout [this page](https://knexjs.org/#Migrations)
 
+#### Reddit Worker
+
+Running locally with docker
+- `make dcu` # starts docker-compose with postgres DB
+- `make start` # starts API server
+- `make build worker` # builds worker code + image
+- `docker run -it --network host reddit-newsletter/worker` # runs worker once and shuts down
+
 ### TODO
 
 - [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic

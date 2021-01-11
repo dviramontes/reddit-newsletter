@@ -13,7 +13,7 @@ console.log(`-- running mode: ${mode || "server"}`);
       // subreddit table
       await startWorker();
       break;
-    case 'service': // fallthrough
+    case "service": // fallthrough
     default:
       // bootstraps api server for creating user accounts
       // and newsletter subscriptions
