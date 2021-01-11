@@ -54,7 +54,7 @@ Running migrations
 - `npx knex migrate:list` list pending migrations
 - For more commands available from knex checkout [this page](https://knexjs.org/#Migrations)
 
-### Testing
+### TODO
 
 - [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic
 - [ ] Write test
@@ -62,4 +62,5 @@ Running migrations
 
 ### Production
 
-- `npm run build`
+- `make build worker` # builds worker image
+- `make build service` # builds service image aka API server
