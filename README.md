@@ -7,7 +7,22 @@
 ```
 {root}
 
-// TODO
+src
+├── controllers            # defines methods for interacting with our database
+│   ├── newsletter.ts
+│   └── subreddit.ts
+├── db.ts                  # database connection handler
+├── handlers.ts
+├── index.ts               # main entrypoint - runs as server, publish and update worker modes
+├── reddit.ts              # reddit restful utilities
+├── routes.ts              # defines the structure of our API
+├── server.ts              # Express.js server + middleware
+├── types.ts
+└── workers                # defines lambda like functions for executing various tasks
+    ├── publish.ts
+    └── update.ts
+
+...
 ```
 
 - [For API service endpoints refer to this doc](./API.md)
@@ -15,8 +30,8 @@
 
 ### Requirements
 
-- Node >= 12
-- Docker
+- [Node >= 12](https://nodejs.org/en/download/)
+- [Docker](https://docs.docker.com/get-docker/)
 - [NVM](https://github.com/nvm-sh/nvm)
 
 ### Setup
@@ -35,8 +50,7 @@
 ### Development
 
 - `make dcu`
-- `npm run dev`
-- `npm run worker`
+- `make start`
 
 other dev tasks
 
@@ -57,16 +71,25 @@ Running migrations
 - `npx knex migrate:list` list pending migrations
 - For more commands available from knex checkout [this page](https://knexjs.org/#Migrations)
 
-#### Reddit Worker
+#### Workers
 
-Running locally with docker
+Workers are lambda like functions that execute a given task and exit
+
+- **update-worker**: updates subreddit's top column with the latest top 3 posts
+- **publish-worker**: publishes a newsletter (right now all it does it print to STDOUT but it will be useful soon :)
+
+They are designed to interact with our API service and can be deployed independently of other user requests
+
+##### Running workers locally with docker
+
 - `make dcu` # starts docker-compose with postgres DB
 - `make start` # starts API server
-- `make build worker` # builds worker code + image
-- `docker run -it --network host reddit-newsletter/worker` # runs worker once and shuts down
+- `make build workers` # builds worker code + image
+- `docker run -it --network host reddit-newsletter/update-worker` # runs worker once and exists
 
-### Infra
-- for instructions on how to use, please refer to [this doc](./k8s/README.md)
+##### Running workers locally with kubernetes (I use minikube but you are welcomed to use something more lightweight)
+
+- Please refer to [this doc](./k8s/README.md) for usage
 
 ### TODO
 

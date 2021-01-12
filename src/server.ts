@@ -3,7 +3,7 @@ import { api, healthCheck } from "./routes";
 import { pingDatabase } from "./db";
 import bodyParser = require("body-parser");
 
-export async function startApiServer() {
+export async function runApiServer() {
   const app = express();
   const port = process.env.PORT || "4000";
 

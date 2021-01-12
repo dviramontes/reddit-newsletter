@@ -15,4 +15,4 @@ RUN npm install
 # Bundle app source
 COPY dist .
 
-CMD [ "node", "index.js", "--mode=worker" ]
+CMD [ "node", "index.js", "--mode=update" ]

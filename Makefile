@@ -1,4 +1,4 @@
-.PHONY: dcu dcd start build worker service
+.PHONY: dcu dcd start build workers service
 
 dcu:
 	docker-compose up -d
@@ -13,8 +13,9 @@ start:
 build:
 	npm run build
 
-worker:
-	docker build -t reddit-newsletter/worker -f Dockerfile.worker .
+workers:
+	docker build -t reddit-newsletter/update-worker -f Dockerfile.update .
+	docker build -t reddit-newsletter/publish-worker -f Dockerfile.publish .
 
 service:
 	docker build -t reddit-newsletter/service -f Dockerfile.service .

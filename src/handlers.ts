@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { fetchPosts } from "./reddit";
 import { pool } from "./db";
 import { isEmpty } from "lodash";
-import { upsertSubreddit } from "./controllers/subreddit";
+import { updateSubredditTops, upsertSubreddit } from "./controllers/subreddit";
 import { upsertNewsletter } from "./controllers/newsletter";
 
 export const pingHandler = (req: Request, res: Response) => {
@@ -18,13 +17,39 @@ export const getAllSubredditsHandler = async (req: Request, res: Response) => {
   await client.release();
 };
 
+export const patchSubredditTopsHandler = async (
+  req: Request,
+  res: Response
+) => {
+  if (isEmpty(req.params) || isEmpty(req.body)) {
+    res.status(400).send("missing :id url param or request body");
+    return;
+  }
+
+  const { tops } = req.body;
+  const { id } = req.params;
+  const updateSubredditTopsResult = await updateSubredditTops(+id, tops);
+
+  if (updateSubredditTopsResult.isErr()) {
+    res.status(500).send(updateSubredditTopsResult.error);
+    return;
+  }
+
+  if (updateSubredditTopsResult.isOk()) {
+    res.status(200).json({ newsletter: updateSubredditTopsResult.value });
+    return;
+  }
+};
+
 export const getAllSubscriptionsHandler = async (
   req: Request,
   res: Response
 ) => {
   const client = await pool.connect();
   const allSubsResponse = await client.query(`
-    SELECT * FROM newsletters as n INNER JOIN users AS u ON (u.id=n.user_id)
+    SELECT * FROM subreddits AS s 
+    INNER JOIN newsletters AS n ON (s.id=n.subreddit_id) 
+    INNER join users AS u ON (u.id=n.user_id);
   `);
 
   res.status(200).json({ subs: allSubsResponse.rows || [] });
