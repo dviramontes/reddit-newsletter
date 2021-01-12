@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: publish-cronjob
 spec:
-  schedule: "*/10 * * * *"
+  schedule: "*/1 * * * *"
   jobTemplate:
     spec:
       template:
