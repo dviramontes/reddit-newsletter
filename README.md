@@ -73,12 +73,11 @@ Running migrations
 
 #### Workers
 
-Workers are lambda like functions that execute a given task and exit
+Workers are lambda like functions that execute a given task and exit.
+They are designed to interact with our API service and can be deployed and scaled independently of user requests.
 
 - **update-worker**: updates subreddit's top column with the latest top 3 posts
-- **publish-worker**: publishes a newsletter (right now all it does it print to STDOUT but it will be useful soon :)
-
-They are designed to interact with our API service and can be deployed independently of other user requests
+- **publish-worker**: publishes a newsletter (right now all it does is print to STDOUT but it will be useful soon :)
 
 ##### Running workers locally with docker
 
@@ -91,13 +90,15 @@ They are designed to interact with our API service and can be deployed independe
 
 - Please refer to [this doc](./k8s/README.md) for usage
 
-### TODO
+### TODO (things i would like to build next)
 
-- [ ] Abstract more db interactions code intro controllers so we can reuse queries and business logic
+- [ ] Abstract more db interaction code intro controllers so we can reuse queries and business logic
 - [ ] Write test
 - [ ] CICD
+- [ ] Build out the operator pattern to kick off more request to kubernetes job workers on demand from API server
+- [ ] Add infra for API service
 
 ### Production
 
-- `make build worker` # builds worker image
+- `make build worker` # builds worker images
 - `make build service` # builds service image aka API server

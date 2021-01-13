@@ -10,11 +10,11 @@ console.log(`-- running mode: ${mode || "server"}`);
 (async () => {
   switch (mode) {
     case "update":
-      // bootstraps worker for fetching latest post in subreddit table
+      // bootstraps worker for fetching latest posts
       await runUpdateWorker();
       break;
     case "publish":
-      // bootstraps worker for publishing latest post in newsletter table
+      // bootstraps worker for publishing latest posts
       await runPublishWorker();
       break;
     case "service": // fallthrough

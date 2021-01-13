@@ -1,6 +1,6 @@
 # `reddit-newsletter/k8s`
 
-> kubernetes setup for reddit cronjob
+> kubernetes setup for publishing and syncing newsletter subscriptions
 
 ### Requirements
 
@@ -17,6 +17,6 @@
 from project root
 
 - `eval $(minikube -p minikube docker-env)`
-- `make build workers` # do this again so that minikube registers our worker image
+- `make build workers` # allows for minikube to pick changes to our images
 - `kubectl -f ./k8s/update-cronjob.yaml`
 - `kubectl -f ./k8s/publish-cronjob.yaml`
