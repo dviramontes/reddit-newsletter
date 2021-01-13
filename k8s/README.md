@@ -6,6 +6,7 @@
 
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 - [Docker](https://docs.docker.com/get-docker/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ### Setup
 
